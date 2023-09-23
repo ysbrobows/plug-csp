@@ -2,9 +2,9 @@
 using PlugApi.Models.Requests.Customers;
 using PlugApi.Models.Responses.Customers;
 
-namespace PlugApi.Interfaces
+namespace PlugApi.Interfaces.Services
 {
-    public interface ICustomerService
+    public interface ICustomerRepository
     {
         /// <summary>
         /// Get all customers in database.

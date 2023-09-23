@@ -1,7 +1,6 @@
 using PlugApi.Data;
-using PlugApi.Interfaces;
 using PlugApi.Middleware;
-using PlugApi.Services;
+using PlugApi.Startup.Settings;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,14 +11,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<CSPContext>();
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddHttpClient("PokemonApi", httpClient =>
-{
-    httpClient.BaseAddress = new Uri("https://pokeapi.co");
-});
-builder.Services.AddHttpClient("JiraApi", httpClient =>
-{
-    httpClient.BaseAddress = new Uri("https://jira.com/api/v2/");
-});
+var configuration = builder.Configuration;
+builder.Services.AddMyApplicationDependencies(configuration);
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
@@ -32,16 +25,6 @@ builder.Services.AddControllers().AddJsonOptions(x =>
 
     x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
-
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.AddScoped<ICustomerService, CustomerService>();
-builder.Services.AddScoped<IPokemonService, PokemonService>();
-
-//builder.ConfigureWebHostDefaults(webBuilder =>
-//{
-//    webBuilder.UseStartup<ApplicationStartup>(); // Aqui, use a classe ApplicationStartup
-//});
-
 
 var app = builder.Build();
 

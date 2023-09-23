@@ -2,18 +2,18 @@
 using PlugApi.Data;
 using PlugApi.Entities;
 using PlugApi.Helpers;
-using PlugApi.Interfaces;
+using PlugApi.Interfaces.Services;
 using PlugApi.Models.Enums;
 using PlugApi.Models.Requests.Customers;
 using PlugApi.Models.Responses.Customers;
 
-namespace PlugApi.Services
+namespace PlugApi.Repository
 {
-    public class CustomerService : ICustomerService
+    public class CustomerRepository : ICustomerRepository
     {
         private CSPContext _dbContext;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public CustomerService(CSPContext dbContext, IHttpContextAccessor httpContextAccessor)
+        public CustomerRepository(CSPContext dbContext, IHttpContextAccessor httpContextAccessor)
         {
             _dbContext = dbContext;
             _httpContextAccessor = httpContextAccessor;

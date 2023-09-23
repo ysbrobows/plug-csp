@@ -15,7 +15,7 @@ public abstract class ApiController : ControllerBase
         _httpClientFactory = httpClientFactory;
     }
 
-    protected IActionResult Response<TResponse>(ApiResult<TResponse> response)
+    protected new IActionResult Response<TResponse>(ApiResult<TResponse> response)
         where TResponse : class
     {
         CustomResult? result = null;

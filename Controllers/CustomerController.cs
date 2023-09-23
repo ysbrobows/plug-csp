@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PlugApi.Entities;
-using PlugApi.Interfaces;
+using PlugApi.Interfaces.Services;
 using PlugApi.Models.Requests.Customers;
 
 namespace PlugApi.Controllers;
@@ -9,8 +9,8 @@ namespace PlugApi.Controllers;
 [ApiController]
 public class CustomerController : ControllerBase
 {
-    private ICustomerService _customerService;
-    public CustomerController(ICustomerService customerService)
+    private ICustomerRepository _customerService;
+    public CustomerController(ICustomerRepository customerService)
     {
         _customerService = customerService;
     }
