@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PlugApi.Common;
 using PlugApi.Entities;
 using PlugApi.Interfaces.Services;
 using PlugApi.Models.Requests.Customers;
+using System.Net;
 
 namespace PlugApi.Controllers;
 
@@ -21,21 +23,32 @@ public class CustomerController : ControllerBase
         return Ok(customers);
     }
     // GET api/<CustomerController>/5
-    [HttpGet("{id}")]
+    [HttpGet("by/id/{id}")]
     public async Task<IActionResult> GetCustomerById(int id)
     {
-        Customer customer = await _customerService.GetCustomerByIdAsync(id);
+        Customer customer = await _customerService.GetCustomerById(id);
         return Ok(customer);
     }
+
+    // GET api/<CustomerController>/projectKey
+    [HttpGet("by/projectKey/{projectKey}")]
+    public async Task<ApiResult> GetCustomerByProjectKey(string projectKey)
+    {
+        Customer? customer = await _customerService.GetCustomerByProjectKey(projectKey);
+
+        return new ApiResult(customer == null ? HttpStatusCode.NotFound : HttpStatusCode.Found, customer, "");
+    }
+
+
     // POST api/<AuthorController>
     [HttpPost]
     public async Task<IActionResult> CreateCustomer(CreateCustomerRequest model)
     {
-        int customerId = await _customerService.CreateCustomer(model);
+        string customerDbConnectionString = await _customerService.CreateCustomer(model);
 
-        if (customerId != 0)
+        if (customerDbConnectionString != null)
         {
-            return Ok(new { message = $"Customer was successfully created in database with the id {customerId}" });
+            return Ok(new { message = $"Customer was successfully created in database.", dbConnectionString = customerDbConnectionString });
         }
 
         return StatusCode(StatusCodes.Status500InternalServerError, "The customer was not created in the database.");

@@ -19,7 +19,7 @@ namespace PlugApi.Migrations
                     Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     Updated = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CustomerName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
-                    ApiKey = table.Column<string>(type: "character varying(36)", unicode: false, maxLength: 36, nullable: true),
+                    ApiKey = table.Column<string>(type: "character varying(255)", unicode: false, maxLength: 255, nullable: true),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
                     InstanceDatabaseId = table.Column<int>(type: "integer", nullable: true),
                     SchemaName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true)

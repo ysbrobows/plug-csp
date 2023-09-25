@@ -6,6 +6,7 @@
         public DateTime Created { get; set; }
         public DateTime Updated { get; set; } = DateTime.Now;
         public string? CustomerName { get; set; }
+        public string? ProjectKey { get; set; }
         public string? ApiKey { get; set; }
         public bool IsActive { get; set; }
         public int? InstanceDatabaseId { get; set; }

@@ -11,3 +11,21 @@ public sealed class ApiResult<TResponse>
 
     public string? MessageError { get; set; }
 }
+
+public class ApiResult
+{
+
+    public HttpStatusCode StatusCode { get; set; }
+
+    public Object? Data { get; set; }
+
+    public string? ErrorMessage { get; set; }
+
+    public ApiResult(HttpStatusCode statusCode, object? data, string? errorMessage)
+    {
+        StatusCode = statusCode;
+        Data = data;
+        ErrorMessage = errorMessage;
+    }
+
+}

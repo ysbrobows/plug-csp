@@ -10,7 +10,7 @@ public class CustomResult
     public IEnumerable<string>? Errors { get; private set; }
 
     public CustomResult(HttpStatusCode statusCode, bool success)
-    {
+    {   
         StatusCode = statusCode;
         Success = success;
     }
