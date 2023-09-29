@@ -40,67 +40,8 @@ namespace PlugApi.Repository
 
             return customersResponse;
         }
-        public async Task<Customer> GetCustomerByIdAsync(int id)
-        {
-            return await _getCustomerById(id).ConfigureAwait(true);
-        }
-        public async Task<int> CreateCustomer(CreateCustomerRequest model)
-        {
-            if (await _dbContext.Customers.AnyAsync(x => x.CustomerName == model.Name))
-                throw new RepositoryException($"An author with the name {model.Name} already exists.");
-            Customer customer = new Customer()
-            {
-                ApiKey = Guid.NewGuid().ToString(),
-                Created = DateTime.Now,
-                CustomerName = model.Name,
-                InstanceDatabaseId = (int)model.DataBaseType,
-                IsActive = true,
-                //VER COM O TIME O MODELO DE concatenacao
-                SchemaName = model.Name.Replace(' ', '_').Trim(),
-                Updated = DateTime.Now,
-            };
 
-            _dbContext.Customers.Add(customer);
-            await _dbContext.SaveChangesAsync().ConfigureAwait(true);
-
-            var schema = _httpContextAccessor.HttpContext.Request.Headers["SchemaName"];
-            if (customer != null)
-            {
-
-                _CreateSchema(customer);
-                return customer.Id;
-            }
-
-            return 0;
-
-        }
-        public async Task UpdateCustomer(int id, UpdateCustomerRequest model)
-        {
-            Customer? customer = await _getCustomerById(id).ConfigureAwait(true);
-
-            customer.CustomerName = model.Name;
-            customer.Updated = DateTime.Now;
-            customer.ApiKey = model.Api_Key.ToString();
-
-            _dbContext.Customers.Update(customer);
-            await _dbContext.SaveChangesAsync();
-
-        }
-        public async Task UpdateIsActiveCustomer(int id)
-        {
-            Customer? customer = await _getCustomerById(id).ConfigureAwait(true);
-
-            customer.IsActive = !customer.IsActive;
-            _dbContext.Customers.Update(customer);
-            await _dbContext.SaveChangesAsync();
-
-        }
-        /// <summary>
-        /// Get a single customer.
-        /// </summary>
-        /// <param name="id">Customer ID</param>
-        /// <returns>A single customer</returns>
-        private async Task<Customer> _getCustomerById(int id)
+        public async Task<Customer> GetCustomerById(int id)
         {
             Customer? customer = await _dbContext.Customers
                 .AsNoTracking()
@@ -114,6 +55,69 @@ namespace PlugApi.Repository
 
             return customer;
         }
+        public async Task<Customer?> GetCustomerByProjectKey(string projectKey)
+        {
+            Customer? customer = await _dbContext.Customers
+                .AsNoTracking()
+                .Where(x => x.ProjectKey == projectKey)
+                .FirstOrDefaultAsync().ConfigureAwait(true);
+
+            return customer;
+        }
+
+        public async Task<string?> CreateCustomer(CreateCustomerRequest model)
+        {
+            if (await _dbContext.Customers.AnyAsync(x => x.CustomerName == model.Name))
+                throw new RepositoryException($"An author with the name {model.Name} already exists.");
+
+            Customer customer = new Customer()
+            {
+                ApiKey = model.ApiKey,
+                ProjectKey = model.ProjectKey,
+                Created = DateTime.Now,
+                CustomerName = model.Name,
+                InstanceDatabaseId = (int)model.DataBaseType,
+                IsActive = true,
+                //VER COM O TIME O MODELO DE concatenacao
+                SchemaName = model.Name?.Replace(' ', '_').Trim(),
+                Updated = DateTime.Now,
+            };
+
+            _dbContext.Customers.Add(customer);
+            await _dbContext.SaveChangesAsync();
+
+            var schema = _httpContextAccessor.HttpContext.Request.Headers["SchemaName"];
+
+            if (customer != null)
+            {
+                _CreateSchema(customer);
+                return !string.IsNullOrEmpty(customer.SchemaName) ? ClientDatabase.GetDatabaseConnectionByName(customer.SchemaName) : "";
+            }
+
+            return null;
+        }
+        public async Task UpdateCustomer(int id, UpdateCustomerRequest model)
+        {
+            Customer? customer = await GetCustomerById(id).ConfigureAwait(true);
+
+            customer.CustomerName = model.Name;
+            customer.Updated = DateTime.Now;
+            customer.ApiKey = model.Api_Key.ToString();
+
+            _dbContext.Customers.Update(customer);
+            await _dbContext.SaveChangesAsync();
+
+        }
+        public async Task UpdateIsActiveCustomer(int id)
+        {
+            Customer? customer = await GetCustomerById(id).ConfigureAwait(true);
+
+            customer.IsActive = !customer.IsActive;
+            _dbContext.Customers.Update(customer);
+            await _dbContext.SaveChangesAsync();
+
+        }
+
         private void _CreateSchema(Customer customer)
         {
             var script1 = String.Format("\r\nCREATE SCHEMA \"{0}\";\r\n", customer.SchemaName);

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PlugApi.Data;
@@ -11,9 +12,10 @@ using PlugApi.Data;
 namespace PlugApi.Migrations
 {
     [DbContext(typeof(CSPContext))]
-    partial class CSPContextModelSnapshot : ModelSnapshot
+    [Migration("20230924221301_add_projectkey_customer")]
+    partial class add_projectkey_customer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

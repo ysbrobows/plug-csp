@@ -16,12 +16,17 @@ namespace PlugApi.Interfaces.Services
         /// </summary>
         /// <param name="id">Id of Customer</param>
         /// <returns>A single Customer</returns>
-        Task<Customer> GetCustomerByIdAsync(int id);
+        Task<Customer> GetCustomerById(int id);
+        /// <summary>
+        /// Get a customer in the database by project key
+        /// </summary>
+        /// <param name="projectKey">Find by project key</param>
+        Task<Customer?> GetCustomerByProjectKey(string projectKey);
         /// <summary>
         /// Create a new customer in the database
         /// </summary>
         /// <param name="model">Create customer request model</param>
-        Task<int> CreateCustomer(CreateCustomerRequest model);
+        Task<string?> CreateCustomer(CreateCustomerRequest model);
         /// <summary>
         /// Update an customer in the database if the customer already exists.
         /// </summary>
