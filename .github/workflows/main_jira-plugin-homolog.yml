@@ -53,5 +53,5 @@ jobs:
         with:
           app-name: 'jira-plugin-homolog'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_9507DEAE66B7488CA2977D8FD0026F8F }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F5D22DC672BC4A55BE9D52372EC38FEE }}
           package: .
