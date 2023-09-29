@@ -44,14 +44,14 @@ public class CustomerController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateCustomer(CreateCustomerRequest model)
     {
-        string customerDbConnectionString = await _customerService.CreateCustomer(model);
+        string? customerDbConnectionString = await _customerService.CreateCustomer(model);
 
-        if (customerDbConnectionString != null)
+        if (string.IsNullOrEmpty(customerDbConnectionString))
         {
-            return Ok(new { message = $"Customer was successfully created in database.", dbConnectionString = customerDbConnectionString });
+            return StatusCode(StatusCodes.Status500InternalServerError, "The customer was not created in the database.");
         }
 
-        return StatusCode(StatusCodes.Status500InternalServerError, "The customer was not created in the database.");
+        return Ok(new { message = $"Customer was successfully created in database.", dbConnectionString = customerDbConnectionString });
     }
 
     // PUT api/<AuthorController>/5

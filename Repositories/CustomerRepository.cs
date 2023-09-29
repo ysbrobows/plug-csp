@@ -72,7 +72,7 @@ namespace PlugApi.Repository
 
             Customer customer = new Customer()
             {
-                ApiKey = model.ApiKey.ToString(),
+                ApiKey = model.ApiKey,
                 ProjectKey = model.ProjectKey,
                 Created = DateTime.Now,
                 CustomerName = model.Name,
